@@ -8,10 +8,10 @@ import os
 import sys
 import pandas as pd
 from pathlib import Path
-from dotenv import load_dotenv
+from dotenv import load_dotenv, find_dotenv
 
-# 加载 .env 环境变量
-load_dotenv()
+# 加载 .env 环境变量（从当前目录向上搜索）
+load_dotenv(find_dotenv())
 
 # 添加项目根目录到路径
 sys.path.insert(0, str(Path(__file__).parent.parent))

@@ -11,10 +11,10 @@ import os
 from pathlib import Path
 from datetime import datetime
 import pandas as pd
-from dotenv import load_dotenv
+from dotenv import load_dotenv, find_dotenv
 
-# 加载 .env 环境变量
-load_dotenv()
+# 加载 .env 环境变量（从当前目录向上搜索）
+load_dotenv(find_dotenv())
 
 # 导入核心模块
 from src.data_loader import load_reviews_from_file, download_if_url

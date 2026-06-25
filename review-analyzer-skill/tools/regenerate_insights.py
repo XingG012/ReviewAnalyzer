@@ -16,10 +16,10 @@ from src.user_persona_analyzer import analyze_user_personas
 from src.insights_generator import calculate_stats_summary, generate_insights
 from src.config import config
 import os
-from dotenv import load_dotenv
+from dotenv import load_dotenv, find_dotenv
 
-# 加载环境变量
-load_dotenv()
+# 加载环境变量（从当前目录向上搜索）
+load_dotenv(find_dotenv())
 
 def load_tagged_csv(csv_path: str):
     """加载已打标的CSV文件"""

@@ -9,9 +9,9 @@ import json
 import argparse
 from pathlib import Path
 from datetime import datetime
-from dotenv import load_dotenv
+from dotenv import load_dotenv, find_dotenv
 
-load_dotenv()
+load_dotenv(find_dotenv())
 
 import pandas as pd
 
