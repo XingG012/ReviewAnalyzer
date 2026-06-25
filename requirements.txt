@@ -1,8 +1,8 @@
-# ==================== ReviewAnalyzer 汇总依赖 ====================
-# 安装所有模块依赖: pip install -r requirements.txt
+# ReviewAnalyzer - aggregated dependencies
+# Install: pip install -r requirements.txt
 
-# 模块1: review-analyzer-skill
+# Module: review-analyzer-skill
 -r review-analyzer-skill/requirements.txt
 
-# (未来更多模块的依赖在此追加)
+# (add more modules here)
 # -r your-other-module/requirements.txt
