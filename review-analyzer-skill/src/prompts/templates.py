@@ -457,7 +457,6 @@ def get_tagging_prompt_batch(reviews: List[Dict]) -> str:
     for r in reviews:
         simplified_reviews.append({
             "review_id": r.get("review_id", ""),
-            "title": r.get("title", ""),
             "body": r.get("body", ""),
             "rating": r.get("rating", "")
         })

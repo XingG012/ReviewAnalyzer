@@ -1,4 +1,4 @@
-#!/usr/bin/env python3                                          # Shebang：告诉系统用 python3 执行此脚本
+#!/usr/bin/env python3                                          # 告诉系统用 python3 执行此脚本
 """
 Amazon 商品评论 AI 深度分析工具 - 主入口 V2.0 (Agent 原生版)
 功能：支持交互式向导 + 全参数驱动 + Sorftime数据对接 + 多模板看板 + 飞书同步
@@ -237,7 +237,8 @@ def main():
         print(f"❌ 错误：找不到文件: {input_path}")
         sys.exit(1)
 
-    # 7. 加载数据 --------------------------------------------------------------------
+    # 7. 加载数据、预处理 --------------------------------------------------------------------
+    # 预处理：列名模糊匹配，去除空值、空行、评论过短的。
     reviews, original_df = load_reviews_from_file(resolved_file)   # 加载 CSV，返回评论列表和原始 DataFrame
     total_available = len(reviews)                                 # 记录一共有多少条有效评论
     print(f"📄 成功加载表格：检测到 {total_available} 条有效评论记录")
@@ -288,7 +289,7 @@ def main():
         print(f"📁 自定义输出目录: {config.OUTPUT_DIR}")
 
     # 11. 提取 ASIN -----------------------------------------------------------------
-    asin = args.asin if args.source == "sorftime" else extract_asin_from_file(resolved_file)  # Sorftime用参数值，CSV从文件名提取
+    asin = args.asin if args.source == "sorftime" else extract_asin_from_file(resolved_file)  # Sorftime用参数值，CSV从文件名提取（如果提取不到则取文件名前10位）
 
     # 12. 截断评论（如果实际数量超过分析上限）------------------------------------------
     if len(reviews) > config.MAX_REVIEWS:

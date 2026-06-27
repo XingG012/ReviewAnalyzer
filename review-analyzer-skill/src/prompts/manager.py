@@ -590,7 +590,7 @@ def build_insights_prompt(
 
     # ── Step 1: 解析条件章节 ──
     context = context or {}
-    resolved_chapters = _resolve_conditionals(chapters, context)           # 条件过滤，返回最终启用的章节编号列表，例如 [1,2,3,4,5,6,7,8,9,10,11,12,13,14]
+    resolved_chapters = _resolve_conditionals(chapters, context)           # 条件过滤，返回最终启用的章节编号列表，例如 [1,2,3,4,5,6,7,8,10,11,12,13,14]
 
     # ── Step 2: 加载章节 prompt 并拼接 ──
     chapter_prompts: List[str] = []

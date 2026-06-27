@@ -88,7 +88,7 @@ class Config:
 
     # ==================== 报告生成配置 ====================
     INSIGHTS_FORMAT: str = "txt"  # 可选: md / txt
-    HTML_CREATOR_NAME: str = os.getenv("HTML_CREATOR_NAME", "Buluu@新西楼")
+    HTML_CREATOR_NAME: str = os.getenv("HTML_CREATOR_NAME", "Xing")
 
     def __post_init__(self):
         """初始化后验证"""

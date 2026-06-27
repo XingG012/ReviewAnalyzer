@@ -332,7 +332,7 @@ def _call_claude_cli(prompt: str, max_retries: int = 3) -> str:
                 text=True,                                                # 返回字符串而非 bytes
                 timeout=config.CLI_TIMEOUT,                              # 超时时间（默认600秒=10分钟）
                 check=True,                                               # 返回码非0时自动抛出 CalledProcessError
-                env={**os.environ, 'PATH': os.environ.get('PATH', '')}   # 传递当前环境变量（确保 CLI 能找到）
+                env={**os.environ, 'PATH': os.environ.get('PATH', '')}   # 传递当前环境变量（确保子进程能继承 .env 中设置的所有环境变量）
             )
 
             # 检查返回码（check=True 已经做了，这里是双重保险）
