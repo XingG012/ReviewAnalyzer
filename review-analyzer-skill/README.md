@@ -1,23 +1,20 @@
-# 评论深度分析Skill
+# 评论深度分析 Skill
 
 <div align="center">
 
-![Review Analyzer](assets/banner.png)
-
 # Review Analyzer Skill
 
-**一款适用于多场景评论内容的AI深度分析工具**
+**一款适用于多场景评论内容的 AI 深度分析工具**
 
 **想了解更多最新AI行业动态，AI+电商/广告的行业实践方法，人与AI如何协作共生的思考，请关注公众号：【新西楼】**
+
 ![qrcode_for_gh_e3b954bd3859_258](https://github.com/user-attachments/assets/d8f068d9-c4f8-46c7-914c-fbcab5d52f2a)
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
 [![Version](https://img.shields.io/badge/version-2.0.0-black.svg)](https://github.com/buluslan/review-analyzer-skill)
-[![English](https://img.shields.io/badge/lang-English-blue.svg)](README_EN.md)
-[![中文](https://img.shields.io/badge/lang-中文-red.svg)](README.md)
 
-**14章深度洞察报告 | 6套主题可视化看板 | 飞书文档同步 | Agent原生架构**
+**14章深度洞察报告 | 6套主题可视化看板 | 飞书文档同步 | Agent 原生架构**
 
 **Created By Buluu@新西楼**
 
@@ -44,12 +41,11 @@ Review Analyzer Skill 是一款 **Agent 原生** 的多场景评论内容深度�
 ### 工作流程
 
 ```
-数据输入: 本地 CSV 或 Sorftime 平台
-     ↓
-Phase 1: AI 深度打标（并发4，22维度标签）
-Phase 2: 用户画像识别（3-4个画像，3正+3负黄金样本）
-Phase 3: 洞察报告生成（14章结构化报告）
-Phase 4: 统一输出（MD + HTML看板 + 飞书同步）
+Phase 1: 数据获取   →  CSV 上传 / Sorftime API
+Phase 2: AI 打标    →  22维度标签，并发4，每批20-50条
+Phase 3: 用户画像   →  场景×性别交叉，3-4个画像 + 黄金样本
+Phase 4: 洞察报告   →  14章结构化报告 + mermaid 图表
+Phase 5: 统一输出   →  MD + HTML看板 + 飞书同步
 ```
 
 > 📄 **[在线查看完整洞察报告示例（飞书文档）](https://my.feishu.cn/docx/GMv7dBzlXo5wblxVaWGclEernib)** — 包含 14 章完整内容 + 飞书白板 mermaid 图表
@@ -60,7 +56,7 @@ Phase 4: 统一输出（MD + HTML看板 + 飞书同步）
 
 ### 📊 22维度智能标签
 
-全面覆盖评论信息的8大维度：
+全面覆盖评论信息的 8 大类别：
 
 ```
 人群维度 (4): 性别、年龄段、职业、购买角色
@@ -117,7 +113,7 @@ Phase 4: 统一输出（MD + HTML看板 + 飞书同步）
 | 要求 | 详情 |
 |------|------|
 | **操作系统** | macOS / Linux / Windows |
-| **Python** | **3.10 或更高版本**（推荐 3.11.x） |
+| **Python** | **3.10 或更高版本**（推荐 3.11+） |
 | **Agent CLI** | Claude Code CLI、OpenCode CLI 等任一 AI Coding Agent |
 | **内存** | 建议 4GB+ |
 | **飞书同步（可选）** | 需安装 [lark-cli](https://github.com/germalli/lark-cli) 并完成认证登录 |
@@ -177,15 +173,15 @@ python3 main.py your_reviews.csv \
 # === 飞书同步（需提前安装 lark-cli 并认证） ===
 --feishu-sync auto|manual|skip
 
-# === 快速重放（跳过打标，从已打标CSV直接执行 Phase 2-5） ===
+# === 快速重放（跳过 Phase 1 数据获取，从已打标CSV直接跑 Phase 2-5） ===
 python3 replay_phase2to5.py output/B09XYZ123-评论分析项目-6.1/评论采集及打标数据_B09XYZ123.csv
 ```
 
 ---
 
-## CSV文件格式要求
+## CSV 文件格式要求
 
-工具支持自动模糊匹配列名，CSV文件需包含：
+工具支持自动模糊匹配列名，CSV 文件需包含：
 
 | 必需列 | 可选列名（模糊匹配） |
 |--------|---------------------|
@@ -201,13 +197,13 @@ python3 replay_phase2to5.py output/B09XYZ123-评论分析项目-6.1/评论采集
 
 运行完成后，将在 `output/` 目录生成以下文件：
 
-### 1. CSV标签数据
+### 1. CSV 标签数据
 ```csv
 评论内容,评分,性别,年龄段,职业,购买角色,使用场景,满意度...
 "The quality is amazing",5,女性,25-34岁,白领,自用,家用办公,高...
 ```
 
-### 2. Markdown洞察报告
+### 2. Markdown 洞察报告
 ```markdown
 # 产品分析洞察报告
 
@@ -218,11 +214,11 @@ python3 replay_phase2to5.py output/B09XYZ123-评论分析项目-6.1/评论采集
 ...
 ```
 
-### 3. HTML可视化看板
-- 黑金奢华配色
-- 交互式图表
-- 动态数据展示
-- 创作者署名（鎏金发光效果）
+### 3. HTML 可视化看板
+- 6 套主题配色可选
+- 交互式 Chart.js 图表
+- 玻璃拟态卡片效果
+- 创作者署名
 
 ---
 
@@ -246,9 +242,9 @@ python3 replay_phase2to5.py output/B09XYZ123-评论分析项目-6.1/评论采集
 
 ```
 review-analyzer-skill/
-├── main.py                      # V2.0 主入口（4 Phase 流程）
+├── main.py                      # V2.0 主入口（5 Phase 流程）
 ├── SKILL.md                     # Agent 指令文件（Claude Code Skill）
-├── replay_phase2to5.py          # 快速重放脚本（跳过打标）
+├── replay_phase2to5.py          # 快速重放脚本（跳过 Phase 1 数据获取）
 ├── requirements.txt             # Python 依赖
 ├── .env.example                 # 环境变量模板
 ├── src/
@@ -261,21 +257,25 @@ review-analyzer-skill/
 │   ├── report_generator.py      # 报告生成（兼容层）
 │   ├── data_fetchers/           # 数据接入层（Sorftime + CSV）
 │   ├── prompts/                 # 14章 Prompt 体系
+│   │   ├── chapters/            #   各章节 prompt 模板
+│   │   ├── tagging.md           #   打标 prompt
+│   │   ├── persona.md           #   画像 prompt
+│   │   ├── insights_v2.md       #   洞察报告 prompt
+│   │   ├── manager.py           #   Prompt 路由管理
+│   │   └── templates.py         #   Prompt 模板
 │   └── templates/               # 可视化看板模板
-│       ├── base/                # 共享基座
-│       │   ├── dashboard_base.html   # 基座 HTML（Jinja2）
-│       │   └── dashboard_base.css    # 基座布局 CSS
-│       ├── premium-gold/        # 黑金主题
-│       ├── dark-tech/           # 赛博朋克主题
-│       ├── linear-minimal/      # 极简蓝白主题
-│       ├── posthog-analytics/   # 暖橙分析主题
-│       ├── stripe-executive/    # 翡翠企业主题
-│       └── warm-editorial/      # 报纸编辑主题
-├── assets/                      # 静态资源（3D 头像）
+│       ├── base/                #   共享基座
+│       │   ├── dashboard_base.html
+│       │   └── dashboard_base.css
+│       ├── premium-gold/        #   黑金主题
+│       ├── dark-tech/           #   赛博朋克主题
+│       ├── linear-minimal/      #   极简蓝白主题
+│       ├── posthog-analytics/   #   暖橙分析主题
+│       ├── stripe-executive/    #   翡翠企业主题
+│       └── warm-editorial/      #   报纸编辑主题
 ├── examples/                    # 示例数据 + 输出样例
 ├── tools/                       # 工具脚本
-├── references/                  # 参考文档
-└── docs/                        # 用户文档
+└── references/                  # 参考文档（标签体系、CSV格式）
 ```
 
 ---
@@ -350,8 +350,8 @@ review-analyzer-skill/
 
 - [x] **v1.0.0** - 首个正式发布（22维度标签 + 双模式 + HTML看板）
 - [x] **v2.0.0** - Agent 原生版（14章报告 + 6套主题 + 飞书同步 + 共享基座架构）
-- [ ] **v2.1.0** - Web 端增强（前端模板选择器 + 截图导出）
-- [ ] **v3.0.0** - 多平台分析（批量 ASIN + 竞品对比报告）
+- [ ] **v2.1.0** - Streamlit Web 界面（ASIN输入 + 在线看板 + 任务历史）
+- [ ] **v3.0.0** - React 全栈版（多用户 + 批量分析 + 竞品对比报告）
 
 ---
 
@@ -364,7 +364,6 @@ review-analyzer-skill/
 ## 致谢
 
 - 感谢 Anthropic 提供 Claude AI
-- 感谢 Google 提供 Gemini API
 - 灵感源自开源社区的智慧贡献
 
 ### 贡献者
@@ -373,7 +372,7 @@ review-analyzer-skill/
 
 | 贡献者 | 贡献内容 |
 |--------|---------|
-| [@zeropool](https://github.com/zeropool) | OpenCode CLI 引擎支持、URL 远程输入、头像资源压缩（[PR#1](https://github.com/buluslan/review-analyzer-skill/pull/1)） |
+| [@zeropool](https://github.com/zeropool) | OpenCode CLI 引擎支持、URL 远程输入（[PR#1](https://github.com/buluslan/review-analyzer-skill/pull/1)） |
 
 > 社区贡献者在提交 PR 后，维护团队会进行代码审查。为确保代码质量与稳定性，部分 PR 可能会以改进版本合入，而非直接 merge 原始提交。
 

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-快速重放脚本：从已打标的 CSV 跳过 Phase 1，直接执行 Phase 2-5
+快速重放脚本：跳过 Phase 1（数据获取），从已打标 CSV 加载 Phase 2 成果，继续执行 Phase 3-5（画像→报告→输出）
 用法：python3 replay_phase2to5.py <tagged_csv> [--template TEMPLATE]
 """
 import sys

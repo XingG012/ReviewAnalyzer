@@ -34,7 +34,7 @@ def print_intro():
     print("""
 🚀 多场景评论内容 AI 深度分析工具 V2.0 — Agent 原生版 Created By Buluu@新西楼
 ======================================================================
-核心功能: 22维度智能标签 · 13章深度洞察报告 · 多风格可视化看板
+核心功能: 22维度智能标签 · 14章深度洞察报告 · 多风格可视化看板
 数据来源: 本地CSV / Sorftime平台
 输出方式: MD报告 + HTML看板(多模板) + 飞书同步(可选)
 ======================================================================
@@ -208,10 +208,10 @@ def main():
         config.CLI_ENGINE = args.engine                            # 覆盖配置中的自动探测结果
         print(f"🔧 CLI 引擎: {config.CLI_ENGINE}")
 
-    # 5. 数据获取（Phase 0）--------------------------------------------------------
+    # 5. Phase 1: 数据获取 ---------------------------------------------------------
     # V2.0：支持两种数据来源——Sorftime 平台 或 本地 CSV
     if args.source == "sorftime":                                  # 模式 A：从 Sorftime 获取
-        print(f"\n📡 [数据获取] 从 Sorftime 获取评论数据...")
+        print(f"\n📡 [Phase 1/5] 从 Sorftime 获取评论数据...")
         print(f"   ASIN: {args.asin}, 站点: {args.site}")
         fetcher = get_fetcher("sorftime")                          # 工厂方法获取 Sorftime 采集器
         if not fetcher.validate_config():                          # 验证配置（API Key 是否设置）
@@ -297,25 +297,25 @@ def main():
         reviews = reviews[:config.MAX_REVIEWS]                      # 只取前 N 条
 
     try:
-        # ========== 执行全流程（Phase 1→2→3→4）==========
+        # ========== 执行全流程（Phase 2→3→4→5）==========
 
-        # Phase 1: AI 深度打标分析 --------------------------------------------------
+        # Phase 2: AI 深度打标分析 --------------------------------------------------
         # 将评论分批，每批并发调用 Claude/OpenCode CLI，给每条评论打上 22 维度标签
-        print(f"\n🧠 [Phase 1/4] 评论AI深度打标分析中...")
+        print(f"\n🧠 [Phase 2/5] 评论AI深度打标分析中...")
         tagged_reviews = analyze_all(reviews, batch_size=args.batch_size)  # 执行打标，返回带标签的评论列表
-        print(f"✅ [Phase 1/4] 评论打标完成！成功分析 {len(tagged_reviews)} 条评论\n")
+        print(f"✅ [Phase 2/5] 评论打标完成！成功分析 {len(tagged_reviews)} 条评论\n")
 
-        # Phase 2: 用户画像识别 -----------------------------------------------------
+        # Phase 3: 用户画像识别 -----------------------------------------------------
         # 根据已打标的评论，按"使用场景+性别"聚类用户画像，每画像选3正3负样本
-        print(f"👥 [Phase 2/4] 用户画像识别与降级逻辑配置中...")
+        print(f"👥 [Phase 3/5] 用户画像识别与降级逻辑配置中...")
         print(f"   - 正在分析 {len(tagged_reviews)} 条打标评论...")
         print(f"   - 识别用户画像中...")
         personas, golden_samples = analyze_user_personas(tagged_reviews)  # 返回画像列表和黄金样本
-        print(f"✅ [Phase 2/4] 用户画像识别完成！识别到 {len(personas)} 个画像，{len(golden_samples)} 条黄金样本\n")
+        print(f"✅ [Phase 3/5] 用户画像识别完成！识别到 {len(personas)} 个画像，{len(golden_samples)} 条黄金样本\n")
 
-        # Phase 3: AI 撰写深度战略洞察报告 -----------------------------------------
+        # Phase 4: AI 撰写深度战略洞察报告 -----------------------------------------
         # 先把打标结果做统计汇总，再把统计+画像+样本传给 CLI，生成 14 章 Markdown 报告
-        print(f"📝 [Phase 3/4] AI深度战略洞察报告生成中...")
+        print(f"📝 [Phase 4/5] AI深度战略洞察报告生成中...")
         print(f"   - 正在生成 {len(personas)} 个用户画像分析...")
         print(f"   - 使用引擎: {engine_label}")
         stats = calculate_stats_summary(tagged_reviews)               # 统计汇总：情感分布、标签TOP30、维度统计等
@@ -326,9 +326,9 @@ def main():
             asin=asin
         )
         if insights_md:                                                # 报告生成成功
-            print(f"✅ [Phase 3/4] 洞察报告已生成！字数约 {len(insights_md):,} 字\n")
+            print(f"✅ [Phase 4/5] 洞察报告已生成！字数约 {len(insights_md):,} 字\n")
         else:                                                          # 报告生成失败
-            print(f"⚠️ [Phase 3/4] 洞察报告生成失败\n")
+            print(f"⚠️ [Phase 4/5] 洞察报告生成失败\n")
 
         # 保存 Markdown 报告到文件
         md_path = config.get_md_path(asin)                             # 根据 ASIN 生成 MD 输出路径
@@ -339,8 +339,8 @@ def main():
         # 保存打标后的 CSV 数据
         csv_path = save_tagged_reviews_to_csv(tagged_reviews, asin)   # 调用前面定义的函数，导出打标结果
 
-        # Phase 4 (V2.0): 输出管理 — 统一生成 MD + HTML看板 + 飞书同步 ----------
-        print(f"📦 [Phase 4/4] 生成完整输出包...")
+        # Phase 5: 输出管理 — 统一生成 MD + HTML看板 + 飞书同步 ----------
+        print(f"📦 [Phase 5/5] 生成完整输出包...")
         from src.output_manager import generate_outputs, select_template  # 导入输出管理器
 
         # 选择模板（none 表示跳过 HTML 生成）

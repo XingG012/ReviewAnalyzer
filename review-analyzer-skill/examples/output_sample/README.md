@@ -7,7 +7,7 @@
 | 文件 | 格式 | 说明 |
 |------|------|------|
 | `reviews_labeled_sample.csv` | CSV | 原始评论 + 22维度 AI 标签 + 评分 |
-| `insights_report_sample.md` | Markdown | 14章深度洞察报告（V1 格式，仅供参考） |
+| `insights_report_sample.md` | Markdown | 14章深度洞察报告（示例输出） |
 | `visual_report_sample.html` | HTML | V2.0 可视化看板（premium-gold 主题，11板块） |
 
 > 📄 **[在线查看完整洞察报告示例（飞书文档）](https://my.feishu.cn/docx/GMv7dBzlXo5wblxVaWGclEernib)** — 包含 14 章完整内容 + 飞书白板 mermaid 图表

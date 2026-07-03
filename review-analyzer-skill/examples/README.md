@@ -24,18 +24,18 @@ examples/
 ### 2. 运行示例分析
 ```bash
 # 使用示例数据运行分析
-python main.py --csv examples/reviews_sample.csv
+python main.py examples/reviews_sample.csv
 
-# 或者使用相对路径
+# 或者进入 examples 目录
 cd examples
-python ../main.py --csv reviews_sample.csv
+python ../main.py reviews_sample.csv
 ```
 
 ### 3. 查看输出结果
-运行后,会在 `output/` 目录生成三种格式的报告:
-- **CSV格式**: 结构化数据,便于分析
-- **Markdown格式**: 易读的文本报告
-- **HTML格式**: 交互式可视化报告
+运行后，会在 `output/` 目录生成三种格式的报告:
+- **CSV 格式**: 结构化数据，便于分析
+- **Markdown 格式**: 易读的文本报告
+- **HTML 格式**: 交互式可视化报告
 
 ## 📖 输出格式详解
 
@@ -46,12 +46,12 @@ python ../main.py --csv reviews_sample.csv
 
 ## 💡 提示
 
-- 示例数据仅包含10条评论,适合快速测试
-- 实际使用时,建议使用50条以上的评论数据以获得更准确的分析结果
+- 示例数据仅包含10条评论，适合快速测试
+- 实际使用时，建议使用50条以上的评论数据以获得更准确的分析结果
 - 你可以参考 `output_sample/` 中的示例来理解输出格式
 
 ## 🔗 相关文档
 
-- [项目主README](../README.md)
-- [使用指南](../docs/usage.md)
-- [数据格式说明](../docs/data_format.md)
+- [项目主 README](../README.md)
+- [CSV 格式说明](../references/csv_format.md)
+- [标签体系说明](../references/tag_system.md)
