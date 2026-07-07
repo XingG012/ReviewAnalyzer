@@ -8,11 +8,22 @@
 ## Always Rules（始终生效）
 
 ```
-# ALWAYS: 写任何代码前，先读取 .memory-bank/architecture.md 和 .memory-bank/PRD.md
-# ALWAYS: 完成一个实施步骤后，更新 .memory-bank/progress.md 的进度状态
-# ALWAYS: 每个功能模块独立一个文件，禁止单文件超过 500 行
+# ── 文档驱动 ──
+# ALWAYS: 写任何代码前，先读取 .memory-bank/architecture.md（包含完整数据库 schema）和 .memory-bank/PRD.md
+# ALWAYS: 添加重大功能或完成里程碑后，更新 .memory-bank/architecture.md
+
+# ── 实施流程 ──
+# ALWAYS: 按 .memory-bank/implementation_plan.md 的步骤顺序执行，禁止跳过或并行
+# ALWAYS: 每完成一个步骤：① 自动化验证（Playwright/curl/pytest）→ ② 提示用户手动验证 → ③ 用户确认通过后更新 .memory-bank/progress.md → ④ 才进入下一步
+
+# ── 模块化（最高优先级） ──
+# ALWAYS: 每个功能模块独立一个文件，严格禁止单文件超过 500 行
+# ALWAYS: 新建文件前，先判断其职责是否可归入现有模块；能复用的绝不新建
+# ALWAYS: 禁止创建 utils.py / helpers.py / common.py 等"万能杂物间"文件
+
+# ── 代码质量 ──
 # ALWAYS: 新增功能必须写测试，覆盖率目标 ≥ 80%
-# ALWAYS: 后端代码遵循 Python 3.11+ 语法，使用 ruff 格式化和 mypy 类型检查
+# ALWAYS: 后端代码遵循 Python 3.13+ 语法，使用 ruff 格式化和 mypy 类型检查
 # ALWAYS: 前端代码使用 TypeScript strict mode，Biome 格式化和 lint
 # ALWAYS: 所有 import 必须显式写出，禁止 import * 和未声明的隐式依赖
 # ALWAYS: API 请求/响应必须用 Pydantic (后端) / Zod (前端) 校验
@@ -68,7 +79,7 @@ ReviewAnalyzer/
 │   │   └── templates/                # 6 套 HTML 可视化主题
 │   ├── references/                   # 标签体系、CSV 格式等参考文档
 │   └── tools/                        # 辅助工具脚本
-├── streamlit_app/              # (待实现) Phase 1: Streamlit Web
+├── streamlit_app/              # Phase 1: Streamlit Web (进行中)
 ├── backend/                    # (待实现) Phase 2: FastAPI 后端
 ├── frontend/                   # (待实现) Phase 2: Next.js 前端
 ├── .memory-bank/                # 项目文档记忆库
@@ -130,24 +141,31 @@ export function TaskList({ tasks }: TaskListProps) { ... }
 // pages/tasks/[id].tsx → components/TaskProgress.tsx → ui/ProgressBar.tsx
 ```
 
-## 模块化规则
+## 模块化规则（最高优先级）
+
+> 这是整个项目可维护性的基石。AI 编码助手最大的坏习惯就是把所有逻辑塞进一个巨型文件——必须严防。
 
 1. **单一职责**：每个文件只做一件事
    - ✅ `user_persona_analyzer.py` — 只负责画像识别
-   - ❌ `utils.py` — 什么都往里扔
+   - ❌ `utils.py` — 什么都往里扔 → **禁止创建此类文件**
 
-2. **文件大小上限**：500 行（超过就拆分）
+2. **文件大小硬上限**：**500 行**。超过必须拆分，无例外。
 
 3. **接口优于实现**：模块间通过明确的函数签名通信
-   - data_fetchers 层定义了 BaseFetcher 抽象类，新增数据源只需实现子类
+   - data_fetchers 层定义了 DataFetcher 抽象类，新增数据源只需实现子类
 
 4. **配置集中**：所有魔法数字、路径名、超时时间 → `src/config.py`
 
-5. **复用现有模块**：Web 层直接 import 分析引擎函数，不要重复实现
+5. **复用现有模块，严禁重复造轮子**：Web 层直接 import 分析引擎函数
    ```python
-   from src.review_analyzer import analyze_all      # ✅
+   from src.review_analyzer import analyze_all              # ✅
    from src.user_persona_analyzer import analyze_user_personas  # ✅
    ```
+
+6. **新建文件前自检**：
+   - 这个功能是否属于某个已有模块？→ 归入已有模块
+   - 这个文件未来会不会超过 500 行？→ 现在就该拆
+   - 这个文件能否用一句话描述清楚职责？→ 不能就别建
 
 ## 分析流水线约定
 

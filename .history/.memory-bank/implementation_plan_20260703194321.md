@@ -20,7 +20,48 @@
 
 - [ ] 确认 `review-analyzer-skill/` 现有模块可独立 import 且不报错
 - [ ] 确认 Python 3.13+ 环境，安装 `streamlit` 和 `sqlite3`（Python 自带）
-- [ ] 阅读 [PRD.md](PRD.md) §2.1-2.3 和 [CLAUDE.md](CLAUDE.md) 的模块化规则
+- [ ] 阅读 [PRD.md](PRD.md) §2.1-2.3 和 [CLAUDE.md](../CLAUDE.md) 的模块化规则
+
+---
+
+## Step 0: Amazon 爬虫集成
+
+**目标**：从 GitHub 找到合适的开源 Amazon 评论爬虫，封装为 `data_fetchers/amazon_fetcher.py`，实现 ASIN → 评论数据的自动化获取。
+
+**做什么**：
+
+1. **搜索与评估开源爬虫**：
+   - 在 GitHub 搜索 `amazon review scraper` / `amazon reviews crawler`
+   - 评估标准：Star 数、最近更新时间、License（需 MIT/Apache/BSD 兼容）、是否支持多站点（US/UK/DE/JP）
+   - 选 2-3 个候选，实际测试哪个最稳定
+
+2. **创建 AmazonFetcher**：
+   - 在 `review-analyzer-skill/src/data_fetchers/` 下创建 `amazon_fetcher.py`
+   - 继承 `base.DataFetcher`，实现 4 个抽象方法（`fetch()` / `validate_config()` / `list_fields()` / `get_name()`）
+   - `fetch(asin, fields, site)` 流程：验证 ASIN → 检查配置（代理、Cookie）→ 调用爬虫 → 标准化列名 → 保存为 CSV → 返回文件路径
+   - `validate_config()` 检查：爬虫模块是否已安装、网络连通性、可选代理可用性
+
+3. **反爬策略**：
+   - User-Agent 轮换池（至少 10 个真实 UA）
+   - 请求间隔控制（随机 3-8 秒）
+   - 可选：代理 IP 池支持（通过环境变量 `PROXY_LIST` 配置）
+   - 失败重试（单个 ASIN 最多重试 3 次，指数退避）
+
+4. **标准化输出**：
+   - 爬取的原始字段 → 标准字段映射（`body`, `rating`, `author`, `date`, `helpful_count`, `is_verified`, `images`）
+   - 输出 CSV 使用 `utf-8-sig` 编码（与现有 `CsvFetcher` 输出格式一致）
+
+5. **注册到 data_fetchers**：
+   - 在 `data_fetchers/__init__.py` 中导出 `AmazonFetcher`
+   - 在 `src/config.py` 中添加 `DATA_SOURCE: str = "amazon"` 选项
+
+**验证方式**：
+- 选一个公开 ASIN（如 `B08N5WRWNW`），运行 `fetch(asin="B08N5WRWNW", fields=[...], site="US")`
+- 能成功获取至少 10 条评论，每条包含 `body`, `rating`, `author`, `date` 四个必选字段
+- 连续 3 次调用不触发 Amazon 反爬封禁
+- `validate_config()` 缺失依赖时返回 `False` 并给出明确提示
+- 生成的 CSV 能被 `CsvFetcher` 正确解析（端到端兼容）
+- 代码不超过 400 行，逻辑清晰，有完整的 docstring
 
 ---
 
@@ -246,7 +287,7 @@
 
 **做什么**：
 1. 创建 `streamlit_app/Dockerfile`：
-   - 基于 `python:3.11-slim`
+   - 基于 `python:3.13-slim`
    - 复制 `review-analyzer-skill/` 和 `streamlit_app/` 到容器
    - 安装依赖：`review-analyzer-skill/requirements.txt` + `streamlit`
    - EXPOSE 8501
@@ -309,6 +350,7 @@
 
 | Step | 状态 | 开始 | 完成 | 备注 |
 |------|------|------|------|------|
+| 0. Amazon 爬虫集成 | ⬜ 待开始 | | | |
 | 1. 目录骨架 | ⬜ 待开始 | | | |
 | 2. UI 三区布局 | ⬜ 待开始 | | | |
 | 3. 输入校验 | ⬜ 待开始 | | | |
@@ -320,13 +362,12 @@
 | 9. 任务历史 | ⬜ 待开始 | | | |
 | 10. 错误处理 | ⬜ 待开始 | | | |
 | 11. Docker 部署 | ⬜ 待开始 | | | |
-| 12. 文档与发布 | ⬜ 待开始 | | | |
+| 12. 文档与发布 | ⬜ 待开始 | | |
 
 ---
 
 ## 不在此阶段的范围（Phase 2 再做）
 
-- ❌ Amazon 爬虫集成（Phase 1 仅 CSV 上传 + Sorftime API）
 - ❌ 用户注册/登录（Phase 1 无用户系统）
 - ❌ React / Next.js 前端重写
 - ❌ Celery 任务队列
