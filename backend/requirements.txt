@@ -1,0 +1,41 @@
+# ── Web 框架 ──
+fastapi>=0.115.0
+uvicorn[standard]>=0.32.0
+gunicorn>=23.0.0
+python-multipart>=0.0.18
+
+# ── 数据层 ──
+sqlalchemy[asyncio]>=2.0.36
+asyncpg>=0.30.0
+alembic>=1.14.0
+psycopg2-binary>=2.9.10
+redis>=5.2.0
+minio>=7.2.0
+
+# ── 任务队列 ──
+celery[redis]>=5.4.0
+
+# ── 数据校验 ──
+pydantic>=2.10.0
+pydantic-settings>=2.7.0
+
+# ── HTTP 客户端 ──
+httpx>=0.28.0
+
+# ── 日志 ──
+structlog>=24.4.0
+
+# ── 现有分析引擎依赖 (复用 review-analyzer-skill/) ──
+pandas>=2.2.0
+jinja2>=3.1.0
+requests>=2.32.0
+beautifulsoup4>=4.12.0
+python-dotenv>=1.0.0
+tqdm>=4.66.0
+
+# ── 开发 / 测试 ──
+pytest>=8.3.0
+pytest-cov>=6.0.0
+pytest-asyncio>=0.24.0
+ruff>=0.8.0
+mypy>=1.13.0

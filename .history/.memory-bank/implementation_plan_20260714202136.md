@@ -1429,7 +1429,7 @@ git push origin main --tags
 
 | Step | 目标 | 状态 | 开始日期 | 完成日期 | 备注 |
 |------|------|------|----------|----------|------|
-| 1 | 项目骨架 + CLAUDE.md + progress.md | ✅ | 2026-07-10 | 2026-07-10 | backend/ 28文件 + health + ruff/pytest 通过 |
+| 1 | 项目骨架 + CLAUDE.md + progress.md | ⬜ | — | — | backend/ 目录 + FastAPI health + 引导文件 |
 | 2 | 数据库 | ⬜ | — | — | 7 表 + Alembic |
 | 3 | 文件存储 | ⬜ | — | — | MinIO + CSV 上传 |
 | 4 | 任务 CRUD | ⬜ | — | — | 创建/列表/详情/删除/重试 |
