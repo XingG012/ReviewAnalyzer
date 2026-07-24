@@ -42,6 +42,8 @@ class Settings(BaseSettings):
     # 运行环境: development / production
     APP_ENV: str = "development"
     LOG_LEVEL: str = "info"
+    # 分析输出目录
+    OUTPUT_DIR: str = "output"
     # 允许跨域请求的前端地址列表
     CORS_ORIGINS: list[str] = ["http://localhost:3000"]
 

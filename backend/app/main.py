@@ -22,10 +22,12 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None]:
     """应用生命周期：启动时初始化，关闭时清理"""
     # 启动阶段：初始化数据库迁移 + MinIO bucket
     from app.core.init_db import init_db
+    from app.services.sse_manager import sse_manager
     from app.services.storage_service import storage_service
 
     init_db()
     storage_service.ensure_bucket()
+    sse_manager.start()
 
     yield
 
