@@ -23,7 +23,8 @@
 #   ① 自动化验证 — 执行该 Step 中「验证方式」表格的所有验证项 → 全部通过
 #   ② 提示用户手动验证 — 用户在浏览器/终端中确认结果
 #   ③ 用户确认通过后 — 更新 .memory-bank/progress.md（该 Step 状态改为 ✅，填写完成日期）
-#   ④ 然后才进入下一个 Step
+#   ④ 用户执行 git add -A，AI 提供 git commit -m 提交说明，用户执行提交
+#   ⑤ 然后才进入下一个 Step
 # ALWAYS: 任何 Step 验证失败时，先修复问题再继续，禁止带着已知问题进入下一步
 
 # ═══════════════════════════════════════════════════════════════
@@ -364,6 +365,39 @@ Phase 5: output_manager.py       → MD + HTML看板 + CSV (+ 飞书同步)
 - 整体覆盖率目标 ≥ 80%
 - 每个 Step 完成后必须运行该 Step 相关的测试套件，确认全部通过
 
+### 后端 API 测试强制规则
+
+```
+# 每个 API 端点都必须有走完整 HTTP 管道的集成测试 — 禁止只用 sync db 测数据层。
+# 只测数据层会漏掉真实 bug：Pydantic schema 字段缺失、Content-Disposition 编码错误、
+# Response/StreamingResponse 生命周期冲突等。
+
+# ✅ 正确 — HTTP 集成测试（走 TestClient + 真实 async FastAPI）
+def test_report_200(self, db, client):
+    task = _setup_complete(db)
+    make_data_visible(db)          # ← 将 sync fixture 的数据提交到 PG
+    resp = client.get(f"/api/tasks/{task.id}/report")
+    assert resp.status_code == 200
+    assert "insights_md" in resp.json()
+    assert "template_name" in resp.json()
+
+# ❌ 错误 — 纯数据层测试（绕过 FastAPI，只测 SQLAlchemy 查询）
+def test_report_query(self, db):
+    report = db.execute(select(AnalysisReport).where(...)).scalar_one()
+    assert report.insights_md is not None  # 骗自己：API 层可能 schema 字段名不匹配
+
+# 覆盖率要求：每个 API 端点 ≥ 1 个 200 测试 + ≥ 1 个错误场景测试（404/422）
+```
+
+**conftest 提供的测试基础设施（已就绪）**：
+
+| 工具 | 用途 |
+|------|------|
+| `client` fixture | FastAPI TestClient，发送真实 HTTP 请求 |
+| `db` fixture | 同步 Session，在测试中创建数据 |
+| `make_data_visible(db)` | 将 sync 事务提交到 PG，使 async `get_db()` 可见 |
+| `_patch_async_engine` | session 级 autouse，NullPool 防 event loop 泄漏 |
+
 ## 常见陷阱
 
 | # | 陷阱 | 后果 | 规避 |
@@ -376,6 +410,7 @@ Phase 5: output_manager.py       → MD + HTML看板 + CSV (+ 飞书同步)
 | 6 | 忘记更新 progress.md | 进度跟踪失效，不知道做到哪了 | 每完成一个 Step 立即更新 |
 | 7 | 跳过 Step 验证直接进入下一步 | 带着 bug 堆叠，后期调试困难 | 严格按 ①②③④ 流程 |
 | 8 | 在 Celery task 中直接操作 FastAPI Request 对象 | Worker 进程中无 Request 上下文 | Celery task 只收 UUID + dict 参数 |
+| 9 | API 测试只用 sync db 测数据层，不走 HTTP | 漏掉 schema 字段缺失、header 编码、Response 生命周期等 bug | 必须用 TestClient + make_data_visible() 走完整 HTTP 管道 |
 
 ## 当前状态与下一步
 

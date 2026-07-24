@@ -15,7 +15,7 @@
 | 4. 任务 CRUD API | ✅ 已完成 | 2026-07-24 | 2026-07-24 | schemas + service + 5 endpoints + 13 tests passed |
 | 5. Celery + Pipeline | ✅ 已完成 | 2026-07-24 | 2026-07-24 | celery_app + analysis_task + pipeline_service + 43 tests passed |
 | 6. SSE 实时进度 | ✅ 已完成 | 2026-07-24 | 2026-07-24 | SSEManager + Redis Pub/Sub + stream endpoint + 43 tests passed |
-| 7. 报告 + 导出 API | ⬜ 待开始 | — | — | 查询 API + 文件下载 |
+| 7. 报告 + 导出 API | ✅ 已完成 | 2026-07-24 | 2026-07-24 | 7 endpoints + 27 HTTP tests + NullPool conftest fix |
 | 8. 前端项目骨架 | ⬜ 待开始 | — | — | Next.js + 6 页面 + API client |
 | 9. 前端页面全功能 | ⬜ 待开始 | — | — | 全功能交互 + SSE 集成 |
 | 10. 6 套主题 + 看板 | ⬜ 待开始 | — | — | 6 套主题 + Chart.js 组件 |
@@ -40,7 +40,7 @@
 
 | 阶段 | 总步骤 | 已完成 | 进行中 | 完成率 |
 |------|--------|--------|--------|--------|
-| Phase 2 全栈 | 12 | 6 | 0 | 50% |
+| Phase 2 全栈 | 12 | 7 | 0 | 58% |
 
 ---
 
