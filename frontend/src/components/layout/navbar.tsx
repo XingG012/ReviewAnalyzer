@@ -4,6 +4,7 @@
 
 import { BarChart3 } from "lucide-react";
 import Link from "next/link";
+import { ThemeSelector } from "@/components/themes/theme-provider";
 
 export function Navbar() {
   return (
@@ -22,6 +23,7 @@ export function Navbar() {
           </Link>
         </div>
         <div className="flex-1" />
+        <ThemeSelector />
       </div>
     </nav>
   );

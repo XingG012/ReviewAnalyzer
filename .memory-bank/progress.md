@@ -17,8 +17,8 @@
 | 6. SSE 实时进度 | ✅ 已完成 | 2026-07-24 | 2026-07-24 | SSEManager + Redis Pub/Sub + stream endpoint + 43 tests passed |
 | 7. 报告 + 导出 API | ✅ 已完成 | 2026-07-24 | 2026-07-24 | 7 endpoints + 27 HTTP tests + NullPool conftest fix |
 | 8. 前端项目骨架 | ✅ 已完成 | 2026-07-24 | 2026-07-24 | Next.js 15 + shadcn/ui + 8 routes + 9 frontend tests |
-| 9. 前端页面全功能 | ⬜ 待开始 | — | — | 全功能交互 + SSE 集成 |
-| 10. 6 套主题 + 看板 | ⬜ 待开始 | — | — | 6 套主题 + Chart.js 组件 |
+| 9. 前端页面全功能 | ✅ 已完成 | 2026-07-24 | 2026-07-24 | CSV上传 + SSE进度 + Tab切换 + TOC报告 + 筛选表格 + 导出下载 |
+| 10. 6 套主题 + 看板 | ✅ 已完成 | 2026-07-24 | 2026-07-24 | 6主题token + ThemeProvider + PieChart + BarChart + PersonaCard + DashboardView |
 | 11. Docker Compose | ⬜ 待开始 | — | — | 7 服务 Compose |
 | 12. 测试 + 文档 | ⬜ 待开始 | — | — | ≥80% 覆盖率 + README + v2.0.0 |
 
@@ -40,7 +40,7 @@
 
 | 阶段 | 总步骤 | 已完成 | 进行中 | 完成率 |
 |------|--------|--------|--------|--------|
-| Phase 2 全栈 | 12 | 8 | 0 | 67% |
+| Phase 2 全栈 | 12 | 10 | 0 | 83% |
 
 ---
 

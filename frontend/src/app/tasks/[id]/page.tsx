@@ -5,6 +5,7 @@
 import Link from "next/link";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
+import { DashboardView } from "@/components/dashboard/dashboard-view";
 import { Container } from "@/components/layout/container";
 import { usePersonas, useReport, useReviews } from "@/hooks/use-report";
 import { useSSE } from "@/hooks/use-sse";
@@ -101,6 +102,19 @@ function ReviewsInline({ taskId }: { taskId: string }) {
       </div>
     </div>
   );
+}
+
+function DashboardTab({
+  id,
+  task,
+}: {
+  id: string;
+  task: NonNullable<ReturnType<typeof useTask>["data"]>;
+}) {
+  const { data: report } = useReport(id);
+  const { data: personas } = usePersonas(id);
+  if (!report) return <p className="text-muted-foreground text-sm">加载看板...</p>;
+  return <DashboardView task={task} report={report} personas={personas ?? []} />;
 }
 
 export default function TaskDetailPage() {
@@ -216,24 +230,7 @@ export default function TaskDetailPage() {
               </Link>
             ))}
           </div>
-          {tab === "dashboard" && (
-            <div className="grid gap-4 sm:grid-cols-3">
-              <Link href={`/tasks/${id}/report`} className="rounded-lg border p-4 hover:shadow-md">
-                <h3 className="font-semibold">📄 洞察报告</h3>
-                <p className="mt-1 text-sm text-muted-foreground">14 章 Markdown 报告全文</p>
-              </Link>
-              <Link href={`/tasks/${id}/reviews`} className="rounded-lg border p-4 hover:shadow-md">
-                <h3 className="font-semibold">📊 评论数据</h3>
-                <p className="mt-1 text-sm text-muted-foreground">
-                  {task.total_reviews} 条 · {task.persona_count} 画像
-                </p>
-              </Link>
-              <Link href={`/export/${id}`} className="rounded-lg border p-4 hover:shadow-md">
-                <h3 className="font-semibold">⬇️ 文件导出</h3>
-                <p className="mt-1 text-sm text-muted-foreground">CSV · Markdown · HTML</p>
-              </Link>
-            </div>
-          )}
+          {tab === "dashboard" && <DashboardTab id={id} task={task} />}
           {tab === "report" && (
             <Link href={`/tasks/${id}/report`} className="text-sm text-primary hover:underline">
               → 全屏查看完整报告
