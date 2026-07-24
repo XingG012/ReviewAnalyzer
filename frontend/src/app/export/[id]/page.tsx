@@ -1,4 +1,4 @@
-/** 文件导出下载页 */
+/** 文件导出下载页 — 显示文件大小 */
 
 "use client";
 
@@ -6,6 +6,7 @@ import { FileSpreadsheet, FileText, Globe } from "lucide-react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { Container } from "@/components/layout/container";
+import { useReport } from "@/hooks/use-report";
 import { useTask } from "@/hooks/use-tasks";
 import { getExportUrl } from "@/lib/api-client";
 
@@ -23,6 +24,7 @@ const formats = [
 export default function ExportPage() {
   const { id } = useParams<{ id: string }>();
   const { data: task } = useTask(id);
+  const { data: report } = useReport(id);
   const isReady = task?.status === "done";
 
   return (
@@ -31,24 +33,25 @@ export default function ExportPage() {
         ← 返回任务详情
       </Link>
       <h1 className="text-2xl font-bold mt-2 mb-6">文件导出</h1>
-
       {!isReady && (
         <p className="text-muted-foreground mb-4">
           任务尚未完成，无法导出。当前状态: {task?.status ?? "加载中"}
         </p>
       )}
-
       <div className="grid gap-4 sm:grid-cols-3">
         {formats.map(({ key, icon: Icon, label, desc }) => (
           <div
             key={key}
-            className={`rounded-lg border p-6 ${
-              isReady ? "hover:shadow-md transition-shadow" : "opacity-50"
-            }`}
+            className={`rounded-lg border p-6 ${isReady ? "hover:shadow-md transition-shadow" : "opacity-50"}`}
           >
             <Icon className="h-8 w-8 text-primary mb-3" />
             <h3 className="font-semibold">{label}</h3>
             <p className="mt-1 text-sm text-muted-foreground">{desc}</p>
+            {report && key === "md" && report.insights_md && (
+              <p className="mt-1 text-xs text-muted-foreground">
+                约 {new Blob([report.insights_md]).size.toLocaleString()} bytes
+              </p>
+            )}
             {isReady && (
               <a
                 href={getExportUrl(id, key)}

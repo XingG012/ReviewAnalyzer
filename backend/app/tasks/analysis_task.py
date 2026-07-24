@@ -180,12 +180,18 @@ def run_analysis_pipeline(self, task_id: str) -> dict:
                 "creator": "Xing",
             },
         )
+        # 从输出文件路径读取 HTML 内容
+        html_content = None
+        html_path = outputs.get("html_path")
+        if html_path:
+            html_content = Path(html_path).read_text(encoding="utf-8")
+
         session.add(
             AnalysisReport(
                 task_id=task.id,
                 insights_md=insights_md,
                 stats=stats,
-                html_content=outputs.get("html_content"),
+                html_content=html_content,
                 template_name=template,
                 md_word_count=len(insights_md or ""),
             )
@@ -241,11 +247,32 @@ def _get_csv_path(session, config, task_id):
     if upload_id:
         upload = session.get(Upload, UUID(upload_id))
         if upload:
-            return upload.stored_path
+            path = upload.stored_path
+            # MinIO 路径: minio://bucket/object_key → 下载到本地临时文件
+            if path.startswith("minio://"):
+                return _download_from_minio(path)
+            return path
     sample_csv = _ENGINE_ROOT / "examples" / "reviews_sample.csv"
     if sample_csv.exists():
         return str(sample_csv)
     raise FileNotFoundError("未找到 CSV 文件")
+
+
+def _download_from_minio(minio_path: str) -> str:
+    """从 MinIO 下载文件到临时目录，返回本地路径"""
+    import tempfile
+
+    from app.services.storage_service import storage_service
+
+    # minio://bucket/object_key
+    parts = minio_path.replace("minio://", "", 1).split("/", 1)
+    object_key = parts[1] if len(parts) > 1 else parts[0]
+
+    content = storage_service.get_file(object_key)
+    tmp = tempfile.NamedTemporaryFile(suffix=".csv", delete=False)
+    tmp.write(content)
+    tmp.close()
+    return tmp.name
 
 
 def _load_reviews(csv_path, max_reviews):

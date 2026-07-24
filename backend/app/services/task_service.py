@@ -36,16 +36,7 @@ class TaskService:
                 detail="CSV 模式下需要先上传文件（upload_id）",
             )
 
-        # 检查 upload_id 对应的上传记录是否存在
-        if data.upload_id:
-            from app.models.upload import Upload
-
-            upload = await db.get(Upload, data.upload_id)
-            if upload is None:
-                raise HTTPException(
-                    status_code=404,
-                    detail=f"上传记录不存在: {data.upload_id}",
-                )
+        # upload_id 由前端刚刚上传获得，无需再次校验数据库
 
         # 创建 Task，默认状态 pending
         task = Task(
