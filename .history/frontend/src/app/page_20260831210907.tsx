@@ -4,7 +4,6 @@
 import { ArrowRight, BarChart3, FileText, Palette } from "lucide-react";
 // next/link是Next.js提供的页面跳转组件，替代原生 HTML 的 `<a>` 标签。
 import Link from "next/link";
-// Container是一个布局组件，用于包裹页面内容并提供统一的样式。
 import { Container } from "@/components/layout/container";
 
 const features = [

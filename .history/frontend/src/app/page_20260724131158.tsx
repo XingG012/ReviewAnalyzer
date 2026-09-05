@@ -1,10 +1,5 @@
-// Amazon 评论深度分析平台 - 首页
-
-// lucide-react是一个图标库。（右箭头、柱状图、文件、调色板）
 import { ArrowRight, BarChart3, FileText, Palette } from "lucide-react";
-// next/link是Next.js提供的页面跳转组件，替代原生 HTML 的 `<a>` 标签。
 import Link from "next/link";
-// Container是一个布局组件，用于包裹页面内容并提供统一的样式。
 import { Container } from "@/components/layout/container";
 
 const features = [

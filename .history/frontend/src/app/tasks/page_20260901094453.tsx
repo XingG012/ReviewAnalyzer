@@ -4,6 +4,7 @@
 
 import { Plus, RotateCcw, Trash2 } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Container } from "@/components/layout/container";
 import { useCreateTask, useDeleteTask, useTasks } from "@/hooks/use-tasks";
@@ -105,6 +106,7 @@ function TaskCard({
 // 函数组件是房子，Hook是装在房子里的家具和电器。
 // 没有Hook的函数组件只能做静态展示；调用了Hook之后，组件才有了状态、副作用、路由等 "活" 的能力。
 export default function TasksPage() {
+  const _router = useRouter();
   // 当前选中的任务状态筛选条件: 例如 "pending", "in_progress", "done", "failed"
   const [statusFilter, setStatusFilter] = useState<string | null>(null);
   const { data, isLoading } = useTasks(statusFilter ? { status: statusFilter } : undefined);
@@ -156,7 +158,7 @@ export default function TasksPage() {
             onDelete={(id) => {
               if (confirm("确定删除此任务？")) deleteTask.mutate(id);
             }}
-            onRetry={() => {
+            onRetry={(_id) => {
               createTask.mutate({ asin: t.asin, site: t.site as "US", source: t.source as "csv" });
             }}
           />

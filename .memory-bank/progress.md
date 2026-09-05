@@ -19,7 +19,7 @@
 | 8. 前端项目骨架 | ✅ 已完成 | 2026-07-24 | 2026-07-24 | Next.js 15 + shadcn/ui + 8 routes + 9 frontend tests |
 | 9. 前端页面全功能 | ✅ 已完成 | 2026-07-24 | 2026-07-24 | CSV上传 + SSE进度 + Tab切换 + TOC报告 + 筛选表格 + 导出下载 |
 | 10. 6 套主题 + 看板 | ✅ 已完成 | 2026-07-24 | 2026-07-24 | 6主题token + ThemeProvider + PieChart + BarChart + PersonaCard + DashboardView |
-| 11. Docker Compose | ⬜ 待开始 | — | — | 7 服务 Compose |
+| 11. Docker Compose | ✅ 已完成 | 2026-07-24 | 2026-07-24 | 7服务编排 + nginx反向代理 + Dockerfiles + .env |
 | 12. 测试 + 文档 | ⬜ 待开始 | — | — | ≥80% 覆盖率 + README + v2.0.0 |
 
 ---
@@ -40,7 +40,7 @@
 
 | 阶段 | 总步骤 | 已完成 | 进行中 | 完成率 |
 |------|--------|--------|--------|--------|
-| Phase 2 全栈 | 12 | 10 | 0 | 83% |
+| Phase 2 全栈 | 12 | 11 | 0 | 92% |
 
 ---
 

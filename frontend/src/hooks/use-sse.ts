@@ -4,7 +4,7 @@
 
 import { useQueryClient } from "@tanstack/react-query";
 import { useCallback, useEffect, useRef, useState } from "react";
-import type { SSEDoneEvent, SSEProgressEvent, TaskResponse } from "@/types";
+import type { SSEProgressEvent, TaskResponse } from "@/types";
 
 interface UseSSEOptions {
   taskId: string;
@@ -48,7 +48,7 @@ export function useSSE({ taskId, enabled = true }: UseSSEOptions) {
 
     es.addEventListener("done", (e) => {
       try {
-        const _data = JSON.parse(e.data) as SSEDoneEvent;
+        JSON.parse(e.data);
         setDone(true);
         close();
         // 刷新任务数据

@@ -5,15 +5,15 @@
 // Hooks
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-
+// components组件
 import { Container } from "@/components/layout/container";
 import { CsvUploader } from "@/components/tasks/csv-uploader";
 import { useCreateTask } from "@/hooks/use-tasks";
-import { taskCreateSchema, toTaskCreatePayload } from "@/lib/validators";
 // 类型
 import type { DataSource, Site, UploadResponse } from "@/types";
 
 const SITES: Site[] = ["US", "UK", "DE", "JP"];
+const ASIN_RE = /^[A-Z0-9]{10}$/;
 
 export default function NewTaskPage() {
   const router = useRouter();
@@ -26,33 +26,41 @@ export default function NewTaskPage() {
   const [errors, setErrors] = useState<string[]>([]);
 
   const handleSubmit = () => {
-    // CSV 模式：必须先上传文件（schema 无法校验文件上传状态）
+    const errs: string[] = [];
+    // CSV mode: must have uploaded file
     if (source === "csv" && !uploadResult) {
-      setErrors(["请先上传 CSV 文件"]);
-      return;
+      errs.push("请先上传 CSV 文件");
     }
+    // Sorftime mode: must have valid ASIN
+    if (source === "sorftime") {
+      if (!asin) errs.push("请输入 ASIN");
+      else if (!ASIN_RE.test(asin.toUpperCase()))
+        errs.push("ASIN 格式不正确，应为 10 位字母数字组合");
+    }
+    // Config
+    if (maxReviews < 10 || maxReviews > 2000) errs.push("评论数量应在 10-2000 之间");
 
-    // CSV 模式下 ASIN 用占位符（后端以 upload_id 为准）
-    const formAsin = source === "csv" ? "CSV0000001" : asin;
-
-    const result = taskCreateSchema.safeParse({
-      asin: formAsin,
-      site,
-      source,
-      upload_id: source === "csv" ? uploadResult?.upload_id : undefined,
-      config: { max_reviews: maxReviews, batch_size: 20, template: "premium-gold" },
-    });
-
-    if (!result.success) {
-      setErrors(result.error.issues.map((issue) => issue.message));
+    if (errs.length > 0) {
+      setErrors(errs);
       return;
     }
     setErrors([]);
 
-    createTask.mutate(toTaskCreatePayload(result.data), {
-      onSuccess: (task) => router.push(`/tasks/${task.id}`),
-      onError: (err) => setErrors([err.message]),
-    });
+    const finalAsin = source === "csv" ? (asin || "CSV0000001").toUpperCase() : asin.toUpperCase();
+
+    createTask.mutate(
+      {
+        asin: finalAsin,
+        site,
+        source,
+        upload_id: source === "csv" ? uploadResult?.upload_id : undefined,
+        config: { max_reviews: maxReviews, batch_size: 20, template: "premium-gold" },
+      },
+      {
+        onSuccess: (task) => router.push(`/tasks/${task.id}`),
+        onError: (err) => setErrors([err.message]),
+      },
+    );
   };
 
   return (
